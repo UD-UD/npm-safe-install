@@ -3578,15 +3578,10 @@ __webpack_require__.r(__webpack_exports__);
 
 
 const [,, ...arg] = process.argv;
-
-// let arg = '/Users/ujjaldutta/Documents/FusionChartsWorks/FusionBoard/hello2/aa'
 let coll = new _collectSymlinks__WEBPACK_IMPORTED_MODULE_0__["default"]();
-
-var path = arg[0] || process.cwd();
-console.log(path);
+var path = arg.length !== 0 ? arg[0] : process.cwd();
 coll.execute(path).then(packages => {
-  console.log(JSON.stringify(packages));
-  _shell__WEBPACK_IMPORTED_MODULE_1__["default"].run(packages, arg, process.cwd);
+  _shell__WEBPACK_IMPORTED_MODULE_1__["default"].run(packages, path);
 });
 
 /***/ }),
@@ -3607,7 +3602,6 @@ __webpack_require__.r(__webpack_exports__);
 
 class Shell {
   static async shell(cmd) {
-    console.log(cmd);
     return new Promise(function (resolve, reject) {
       Object(child_process__WEBPACK_IMPORTED_MODULE_0__["exec"])(cmd, (err, stdout, stderr) => {
         if (err) {
@@ -3619,15 +3613,16 @@ class Shell {
     });
   }
 
-  static async run(packages, targetdir, currentdir) {
+  static async run(packages, targetdir) {
     let packageName = [];
-    targetdir = targetdir || currentdir;
+    console.log('*********** Installing Dependencies ***********');
     let { stdout } = await this.shell(`cd ${targetdir} && npm install`);
     this.print(stdout);
     packages.forEach(pkg => {
       packageName.push(pkg.packageName);
     });
     let names = packageName.join(' ');
+    console.log('*********** Rebuilding Links ***********');
     let log = await this.shell(`cd ${targetdir} && npm link ${names}`);
     this.print(log.stdout);
   }

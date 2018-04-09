@@ -28,7 +28,6 @@ module.exports = {
   'target': 'node',
   plugins: [
     function () {
-      console.log('hello')
       this.plugin('done', () => {
         shell
           .echo('#!/usr/bin/env node\n')

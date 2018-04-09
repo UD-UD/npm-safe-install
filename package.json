@@ -1,7 +1,7 @@
 {
-  "name": "js-lib-seed",
+  "name": "npm-safe-install",
   "version": "1.0.0",
-  "description": "JS boiler plate with linting,test and coverage",
+  "description": "",
   "main": "index.js",
   "scripts": {
     "build": "webpack",
@@ -17,7 +17,7 @@
     "sourceMap": false
   },
   "bin": {
-    "safe-install": "./cli.js"
+    "npm-safe-install": "./out/cli.js"
   },
   "author": "Ujjal Kumar Dutta",
   "license": "MIT",
