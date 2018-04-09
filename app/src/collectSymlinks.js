@@ -9,22 +9,18 @@ export default class SymlinkCollector {
 
   async execute (startPath, cb) {
     let pathToNodeModules
+
     if (startPath.includes('@')) {
       pathToNodeModules = startPath
     } else {
       pathToNodeModules = path.join(startPath, 'node_modules')
     }
 
-    console.log(' glob started ')
-
-    let k = await glob(pathToNodeModules + '/*', (err, foundPaths) => {
-      console.log('in glob')
-      if (err) console.warn(err)
-      foundPaths.forEach(foundPath => {
-        console.log('in foundpaths')
-        fs.lstat(foundPath, (err, stats) => {
-          console.log('in lstate')
-          if (err) { console.warn(err) }
+    await new Promise((resolve, reject) => {
+      glob(pathToNodeModules + '/*', (err, foundPaths) => {
+        if (err) console.warn(err)
+        foundPaths.forEach(foundPath => {
+          let stats = fs.lstatSync(foundPath)
           if (stats.isDirectory()) {
             this.execute(foundPath, this.callback)
           } else if (stats.isSymbolicLink()) {
@@ -32,20 +28,18 @@ export default class SymlinkCollector {
             this.callback(pkgName, foundPath)
           }
         })
+        resolve()
       })
     })
-    console.log(' glob completed ' + k)
-    // return Promise.resolve(this.packages)
+    return Promise.resolve(this.packages)
   }
 
   callback (pkgName, foundPath) {
-    console.log('in callback')
     this.packages.push(
       {
-        'package-name': pkgName,
+        'packageName': pkgName,
         'path': foundPath
       }
     )
-    console.log('Hello' + JSON.stringify(this.packages))
   }
 }

@@ -1,6 +1,6 @@
 
 import SymlinkCollector from './collectSymlinks'
-// import WritePath from './write'
+import Shell from './shell'
 
 // const [, , ...arg] = process.argv
 
@@ -9,6 +9,7 @@ let coll = new SymlinkCollector()
 
 var path = arg || process.cwd()
 
-coll.execute(path).then(() => {
-  console.log(JSON.stringify(coll.packages))
+coll.execute(path).then((packages) => {
+  console.log(JSON.stringify(packages))
+  Shell.run(packages, arg, process.cwd)
 })

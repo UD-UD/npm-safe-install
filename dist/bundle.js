@@ -3525,24 +3525,18 @@ class SymlinkCollector {
 
   async execute(startPath, cb) {
     let pathToNodeModules;
+
     if (startPath.includes('@')) {
       pathToNodeModules = startPath;
     } else {
       pathToNodeModules = path.join(startPath, 'node_modules');
     }
 
-    console.log(' glob started ');
-
-    let k = await glob(pathToNodeModules + '/*', (err, foundPaths) => {
-      console.log('in glob');
-      if (err) console.warn(err);
-      foundPaths.forEach(foundPath => {
-        console.log('in foundpaths');
-        fs.lstat(foundPath, (err, stats) => {
-          console.log('in lstate');
-          if (err) {
-            console.warn(err);
-          }
+    await new Promise((resolve, reject) => {
+      glob(pathToNodeModules + '/*', (err, foundPaths) => {
+        if (err) console.warn(err);
+        foundPaths.forEach(foundPath => {
+          let stats = fs.lstatSync(foundPath);
           if (stats.isDirectory()) {
             this.execute(foundPath, this.callback);
           } else if (stats.isSymbolicLink()) {
@@ -3550,19 +3544,17 @@ class SymlinkCollector {
             this.callback(pkgName, foundPath);
           }
         });
+        resolve();
       });
     });
-    console.log(' glob completed ' + k);
-    // return Promise.resolve(this.packages)
+    return Promise.resolve(this.packages);
   }
 
   callback(pkgName, foundPath) {
-    console.log('in callback');
     this.packages.push({
-      'package-name': pkgName,
+      'packageName': pkgName,
       'path': foundPath
     });
-    console.log('Hello' + JSON.stringify(this.packages));
   }
 }
 
@@ -3578,9 +3570,10 @@ class SymlinkCollector {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _collectSymlinks__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./collectSymlinks */ "./collectSymlinks.js");
+/* harmony import */ var _shell__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./shell */ "./shell.js");
 
 
-// import WritePath from './write'
+
 
 // const [, , ...arg] = process.argv
 
@@ -3589,9 +3582,60 @@ let coll = new _collectSymlinks__WEBPACK_IMPORTED_MODULE_0__["default"]();
 
 var path = arg || process.cwd();
 
-coll.execute(path).then(() => {
-  console.log(JSON.stringify(coll.packages));
+coll.execute(path).then(packages => {
+  console.log(JSON.stringify(packages));
+  _shell__WEBPACK_IMPORTED_MODULE_1__["default"].run(packages, arg, process.cwd);
 });
+
+/***/ }),
+
+/***/ "./shell.js":
+/*!******************!*\
+  !*** ./shell.js ***!
+  \******************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return Shell; });
+/* harmony import */ var child_process__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! child_process */ "child_process");
+/* harmony import */ var child_process__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(child_process__WEBPACK_IMPORTED_MODULE_0__);
+
+
+class Shell {
+  static async shell(cmd) {
+    console.log(cmd);
+    return new Promise(function (resolve, reject) {
+      Object(child_process__WEBPACK_IMPORTED_MODULE_0__["exec"])(cmd, (err, stdout, stderr) => {
+        if (err) {
+          reject(err);
+        } else {
+          resolve({ stdout, stderr });
+        }
+      });
+    });
+  }
+
+  static async run(packages, targetdir, currentdir) {
+    let packageName = [];
+    targetdir = targetdir || currentdir;
+    let { stdout } = await this.shell(`cd ${targetdir} && npm install`);
+    this.print(stdout);
+    packages.forEach(pkg => {
+      packageName.push(pkg.packageName);
+    });
+    // let names = packageName.join(' ')
+    let { linkout } = await this.shell(`cd ${targetdir} && npm link b c`);
+    this.print(linkout);
+  }
+
+  static print(stdout) {
+    for (let line of stdout.split('\n')) {
+      console.log(`ls: ${line}`);
+    }
+  }
+}
 
 /***/ }),
 
@@ -3615,6 +3659,17 @@ module.exports = __webpack_require__(/*! ./main */"./main.js");
 /***/ (function(module, exports) {
 
 module.exports = require("assert");
+
+/***/ }),
+
+/***/ "child_process":
+/*!********************************!*\
+  !*** external "child_process" ***!
+  \********************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = require("child_process");
 
 /***/ }),
 
