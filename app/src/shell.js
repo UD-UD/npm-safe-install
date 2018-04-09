@@ -23,13 +23,11 @@ export default class Shell {
       packageName.push(pkg.packageName)
     })
     let names = packageName.join(' ')
-    let { linkout } = await this.shell(`cd ${targetdir} && npm link ${names}`)
-    this.print(linkout)
+    let log = await this.shell(`cd ${targetdir} && npm link ${names}`)
+    this.print(log.stdout)
   }
 
   static print (stdout) {
-    for (let line of stdout.split('\n')) {
-      console.log(`ls: ${line}`)
-    }
+    console.log(stdout)
   }
 }
