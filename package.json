@@ -17,7 +17,8 @@
     "sourceMap": false
   },
   "bin": {
-    "npm-safe-install": "./out/cli.js"
+    "npm-safe-install": "./out/cli.js",
+    "nsi":"./out/cli.js"
   },
   "author": "Ujjal Kumar Dutta",
   "license": "MIT",
