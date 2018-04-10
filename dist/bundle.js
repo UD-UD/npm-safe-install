@@ -3560,6 +3560,64 @@ class SymlinkCollector {
 
 /***/ }),
 
+/***/ "./controller.js":
+/*!***********************!*\
+  !*** ./controller.js ***!
+  \***********************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return Controller; });
+/* harmony import */ var _collectSymlinks__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./collectSymlinks */ "./collectSymlinks.js");
+/* harmony import */ var _shell__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./shell */ "./shell.js");
+
+
+const path = __webpack_require__(/*! path */ "path");
+const fs = __webpack_require__(/*! fs */ "fs");
+
+class Controller {
+  constructor(path) {
+    this.path = path;
+  }
+  run() {
+    let targetPath = this.path;
+    if (this.checkFile(targetPath, '.nsi.json')) {
+      this.readFromNSIFile(targetPath);
+    } else {
+      this.collectSymLinksFromNodeModules(targetPath);
+    }
+  }
+
+  collectSymLinksFromNodeModules(path) {
+    let coll = new _collectSymlinks__WEBPACK_IMPORTED_MODULE_0__["default"]();
+    coll.execute(path).then(packages => {
+      let packageName = [];
+      packages.forEach(pkg => {
+        packageName.push(pkg.packageName);
+      });
+      _shell__WEBPACK_IMPORTED_MODULE_1__["default"].run(packageName.join(' '), path);
+    });
+  }
+
+  readFromNSIFile(targetPath) {
+    let nsiPath = path.join(targetPath, '.nsi.json');
+    let packages = fs.readFileSync(nsiPath, 'utf8');
+    _shell__WEBPACK_IMPORTED_MODULE_1__["default"].run(JSON.parse(packages).join(' '), targetPath);
+  }
+
+  checkFile(targetpath, filename) {
+    let filepath = path.join(targetpath, filename);
+    if (!fs.existsSync(filepath)) {
+      console.warn('.nsi.json not found. Looking into node modules');
+      return false;
+    } else return true;
+  }
+}
+
+/***/ }),
+
 /***/ "./main.js":
 /*!*****************!*\
   !*** ./main.js ***!
@@ -3569,18 +3627,16 @@ class SymlinkCollector {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _collectSymlinks__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./collectSymlinks */ "./collectSymlinks.js");
-/* harmony import */ var _shell__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./shell */ "./shell.js");
-
-
+/* harmony import */ var _controller__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./controller */ "./controller.js");
 
 
 const [,, ...arg] = process.argv;
-let coll = new _collectSymlinks__WEBPACK_IMPORTED_MODULE_0__["default"]();
-var path = arg.length !== 0 ? arg[0] : process.cwd();
-coll.execute(path).then(packages => {
-  _shell__WEBPACK_IMPORTED_MODULE_1__["default"].run(packages, path);
-});
+
+const path = arg.length !== 0 ? arg[0] : process.cwd();
+
+let controller = new _controller__WEBPACK_IMPORTED_MODULE_0__["default"](path);
+
+controller.run();
 
 /***/ }),
 
@@ -3612,16 +3668,11 @@ class Shell {
   }
 
   static async run(packages, targetdir) {
-    let packageName = [];
     console.log('*********** Installing Dependencies ***********');
     let { stdout } = await this.shell(`cd ${targetdir} && npm install`);
     this.print(stdout);
-    packages.forEach(pkg => {
-      packageName.push(pkg.packageName);
-    });
-    let names = packageName.join(' ');
     console.log('*********** Rebuilding Links ***********');
-    let log = await this.shell(`cd ${targetdir} && npm link ${names}`);
+    let log = await this.shell(`cd ${targetdir} && npm link ${packages}`);
     this.print(log.stdout);
   }
 

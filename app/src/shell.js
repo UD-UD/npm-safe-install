@@ -14,16 +14,11 @@ export default class Shell {
   }
 
   static async run (packages, targetdir) {
-    let packageName = []
     console.log('*********** Installing Dependencies ***********')
     let { stdout } = await this.shell(`cd ${targetdir} && npm install`)
     this.print(stdout)
-    packages.forEach(pkg => {
-      packageName.push(pkg.packageName)
-    })
-    let names = packageName.join(' ')
     console.log('*********** Rebuilding Links ***********')
-    let log = await this.shell(`cd ${targetdir} && npm link ${names}`)
+    let log = await this.shell(`cd ${targetdir} && npm link ${packages}`)
     this.print(log.stdout)
   }
 
