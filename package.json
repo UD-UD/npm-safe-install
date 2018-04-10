@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "build": "webpack",
+    "build": "webpack && npm run test && npm run cover",
     "test": "mocha-webpack --webpack-config webpack.config.test.js \"spec/**/*.spec.js\"",
     "test-ci": "mocha-webpack",
     "cover": "cross-env NODE_ENV=coverage nyc --reporter=lcov --reporter=text npm run test"

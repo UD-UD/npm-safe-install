@@ -38,5 +38,8 @@ describe('TEST 1', () => {
         expect(data.stdout).to.equals(process.cwd())
       })
     })
+    it('Shell Run , adding test submodule "a","b"', () => {
+      expect(Shell.run(['a', 'b'], targetpath))
+    })
   })
 })

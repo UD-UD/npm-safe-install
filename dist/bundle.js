@@ -3586,6 +3586,7 @@ class Controller {
     if (this.checkFile(targetPath, '.nsi.json')) {
       this.readFromNSIFile(targetPath);
     } else {
+      console.warn('.nsi.json not found. Looking into node modules');
       this.collectSymLinksFromNodeModules(targetPath);
     }
   }
@@ -3610,7 +3611,6 @@ class Controller {
   checkFile(targetpath, filename) {
     let filepath = path.join(targetpath, filename);
     if (!fs.existsSync(filepath)) {
-      console.warn('.nsi.json not found. Looking into node modules');
       return false;
     } else return true;
   }
