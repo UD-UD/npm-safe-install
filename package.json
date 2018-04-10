@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "build": "webpack && npm run test && npm run cover",
+    "build": "webpack",
     "test": "mocha-webpack --webpack-config webpack.config.test.js \"spec/**/*.spec.js\"",
     "test-ci": "mocha-webpack",
     "cover": "cross-env NODE_ENV=coverage nyc --reporter=lcov --reporter=text npm run test"
@@ -18,7 +18,7 @@
   },
   "bin": {
     "npm-safe-install": "./out/cli.js",
-    "nsi":"./out/cli.js"
+    "nsi": "./out/cli.js"
   },
   "author": "Ujjal Kumar Dutta",
   "license": "MIT",
@@ -28,6 +28,7 @@
     "babel-loader": "^7.1.4",
     "babel-preset-es2015": "^6.24.1",
     "chai": "^4.1.2",
+    "commander": "^2.15.1",
     "eslint": "^4.19.1",
     "eslint-config-standard": "^11.0.0",
     "eslint-loader": "^2.0.0",

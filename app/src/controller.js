@@ -4,8 +4,9 @@ const path = require('path')
 const fs = require('fs')
 
 export default class Controller {
-  constructor (path) {
+  constructor (path, args) {
     this.path = path
+    this.newPackages = args !== undefined ? args.join(' ') : undefined
   }
   run () {
     let targetPath = this.path
@@ -24,16 +25,19 @@ export default class Controller {
       packages.forEach(pkg => {
         packageName.push(pkg.packageName)
       })
-      Shell.run(packageName.join(' '), path)
+      this.runShell(packageName.join(' '), path)
     })
   }
 
   readFromNSIFile (targetPath) {
     let nsiPath = path.join(targetPath, '.nsi.json')
     let packages = fs.readFileSync(nsiPath, 'utf8')
-    Shell.run(JSON.parse(packages).join(' '), targetPath)
+    this.runShell(JSON.parse(packages).join(' '), targetPath)
   }
 
+  runShell (packages, targetPath) {
+    Shell.run(packages, targetPath, this.newPackages)
+  }
   checkFile (targetpath, filename) {
     let filepath = path.join(targetpath, filename)
     if (!fs.existsSync(filepath)) {
