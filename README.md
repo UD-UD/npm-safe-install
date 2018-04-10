@@ -19,8 +19,6 @@ Install `npm-safe-install` globally by running the following command.
 npm install -g npm-safe-install
 ```
 
-End with an example of getting some data out of the system or using it for a little demo
-
 ## Usage
 You can run the module by using any of the following command : 
 * `npm-safe-install`
@@ -28,26 +26,28 @@ You can run the module by using any of the following command :
 
 Suppose you have a project `test` where you want to use this module.
 
-Create a `.nsi.json` in the root directory `test` and list all the submodules in an array 
+Create a `.nsi.json` in the root directory and list all the submodules in an array 
 
 ```json
+// example
 [
     "module-1",
     "module-2"
 ]
 ```
-If you dont provide the above file `nsi` will search the `node_modules` of the project for linked projects.
+If you don't provide the above file `nsi` will search the `node_modules` of the project for linked projects.
 
+### Running 
 You can go to the test directory and run 
 
-```javascript
+```bash
 nsi
 ```
 Or you can run 
 
-```javascript
+```bash
 nsi `path-of-the-project`
-//example: nsi a/b/d/test
+## example: nsi a/b/d/test
 ```
 
 
