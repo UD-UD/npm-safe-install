@@ -1,3 +1,16 @@
+<p align="center">
+  <img src="https://raw.githubusercontent.com/UD-UD/npm-safe-install/master/demo.gif" alt="Safe npm install">
+    <br>
+    <br>
+</p>
+
+[![Build Status](https://travis-ci.org/UD-UD/npm-safe-install.svg?branch=develop)](https://travis-ci.org/UD-UD/npm-safe-install)
+[![NPM version](https://img.shields.io/npm/v/npm-safe-install.svg)](https://www.npmjs.com/package/npm-safe-install)
+[![Required Node version](https://img.shields.io/node/v/npm-safe-install.svg)](https://www.npmjs.com/package/npm-safe-install)
+[![NPM total downloads](https://img.shields.io/npm/dt/npm-safe-install.svg)](https://www.npmjs.com/package/npm-safe-install)
+[![Contributors](https://img.shields.io/github/contributors/UD-UD/npm-safe-install.svg)](https://github.com/UD-UD/npm-safe-install/graphs/contributors)
+[![License](https://img.shields.io/github/license/UD-UD/npm-safe-install.svg)](https://github.com/UD-UD/npm-safe-install/blob/master/LICENSE)
+
 # npm-safe-install
 
 A cli utility that performs npm install in a safe manner such the locally linked modules are re-linked after installation

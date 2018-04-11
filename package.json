@@ -20,15 +20,15 @@
     "npm-safe-install": "./out/cli.js",
     "nsi": "./out/cli.js"
   },
-  "keys" :[
+  "keys": [
     "npm",
-    "safe install",
+    "safe-install",
     "link",
-    "npm link",
+    "npm-link",
     "nsi",
     "npm-safe-install"
   ],
-  "author": "Ujjal Kumar Dutta",
+  "author": "Ujjal Kumar Dutta <duttaujjal143@gmail.com>",
   "license": "MIT",
   "devDependencies": {
     "babel-core": "^6.26.0",
@@ -57,8 +57,12 @@
     "webpack-node-externals": "^1.7.2"
   },
   "dependencies": {
+    "babel": "^6.23.0",
     "cross-env": "^5.1.4",
     "glob": "^7.1.2",
     "shelljs": "^0.8.1"
+  },
+  "engines": {
+    "node": ">=8.4.0"
   }
 }
