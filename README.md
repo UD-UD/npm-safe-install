@@ -4,16 +4,17 @@ A cli utility that performs npm install in a safe manner such the locally linked
 
 ## Getting Started
 
-These instructions will get you a copy of the project up and running on your local machine.
+These instructions will get your a copy of the project up and running on your local machine.
 
 ### Prerequisites
 
-You need to have node installed in you system.You can easily install node from following :
-* [Download Node](https://nodejs.org/en/download/)
+```
+node >= 8.4.0
+```
 
 ### Installing
 
-Install `npm-safe-install` globally by running the following command.
+Install `npm-safe-install` globally by running the following command:
 
 ```bash
 npm install -g npm-safe-install
@@ -41,7 +42,7 @@ The utility will rebuild the links for the submodules specified in this file.
 This utility has the following options :
 
 ```bash
-# run nsi
+# run nsi in current directory
 nsi
 
 # install npm packages
@@ -54,14 +55,11 @@ nsi -t <target folder path>
 nsi -t <target folder path> package-1 package-2
 
 # check version
-nsi -V
+nsi -v
 
 # list all options
 nsi -h 
 ```
-## Built With
-
-* [Webpack](http://www.dropwizard.io/1.0.2/docs/) - The web framework used
 
 ## License
 
