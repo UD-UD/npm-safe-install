@@ -37,21 +37,28 @@ Create a `.nsi.json` in the root directory and list all the submodules in an arr
 ```
 If you don't provide the above file `nsi` will search the `node_modules` of the project for linked projects.
 
-### Running 
-You can go to the test directory and run 
+### Options 
+The cli has the following options :
 
 ```bash
+# run nsi
 nsi
+
+# install npm packages
+nsi package-1 package-2
+
+# run nsi in target folder
+nsi -t <target folder path>
+
+# install npm package in target path
+nsi -t <target folder path> package-1 package-2
+
+# check version
+nsi -V
+
+# list all options
+nsi -h 
 ```
-Or you can run 
-
-```bash
-nsi `path-of-the-project`
-## example: nsi a/b/d/test
-```
-
-
-
 ## Built With
 
 * [Webpack](http://www.dropwizard.io/1.0.2/docs/) - The web framework used
