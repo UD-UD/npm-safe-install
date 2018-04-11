@@ -1,7 +1,7 @@
 const path = require('path')
 const shell = require('shelljs')
 module.exports = {
-  mode: 'development',
+  mode: 'production',
   context: path.join(__dirname, '/app/src'),
   entry: ['./main'],
   devtool: 'cheap-source-map',
