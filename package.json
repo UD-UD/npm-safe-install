@@ -22,13 +22,13 @@
   },
   "keys": [
     "npm",
-    "safe install",
+    "safe-install",
     "link",
-    "npm link",
+    "npm-link",
     "nsi",
     "npm-safe-install"
   ],
-  "author": "Ujjal Kumar Dutta",
+  "author": "Ujjal Kumar Dutta <duttaujjal143@gmail.com>",
   "license": "MIT",
   "devDependencies": {
     "babel-core": "^6.26.0",
