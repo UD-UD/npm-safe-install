@@ -20,6 +20,14 @@
     "npm-safe-install": "./out/cli.js",
     "nsi": "./out/cli.js"
   },
+  "keys" :[
+    "npm",
+    "safe install",
+    "link",
+    "npm link",
+    "nsi",
+    "npm-safe-install"
+  ],
   "author": "Ujjal Kumar Dutta",
   "license": "MIT",
   "devDependencies": {
