@@ -2,6 +2,7 @@ import SymlinkCollector from './collectSymlinks'
 import Shell from './shell'
 const path = require('path')
 const fs = require('fs')
+const chalk = require('chalk')
 
 export default class Controller {
   constructor (path, args) {
@@ -11,9 +12,12 @@ export default class Controller {
   run () {
     let targetPath = this.resolveRoot(this.path)
     if (this.checkFile(targetPath, '.nsi.json')) {
+      console.log(chalk.green('\nFound .nsi.json file. \n   Proceeding for safe install..'))
       this.readFromNSIFile(targetPath)
     } else {
-      console.warn('.nsi.json not found. Looking into node modules')
+      console.log(chalk.red('\nUnable to find .nsi.json') +
+        chalk.cyan('\nScanning modules...') +
+        chalk.green('\nProceeding for safe install...'))
       this.collectSymLinksFromNodeModules(targetPath)
     }
   }
@@ -76,7 +80,7 @@ export default class Controller {
     if (!this.defaultCheck(startPath)) {
       startPath = this.findRoot(startPath)
     }
-    console.log(startPath)
+    console.log(chalk.white(chalk.green.bold('\nRunning nsi in: ') + startPath))
     return startPath
   }
 }

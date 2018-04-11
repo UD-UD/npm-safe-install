@@ -1,6 +1,6 @@
 # npm-safe-install
 
-A node cli that performs npm install in a safe manner such the locally linked modules are re-linked after installation
+A cli utility that performs npm install in a safe manner such the locally linked modules are re-linked after installation
 
 ## Getting Started
 
@@ -24,9 +24,9 @@ You can run the module by using any of the following command :
 * `npm-safe-install`
 * `nsi`
 
-Suppose you have a project `test` where you want to use this module.
+When you run this utility ,it searches for the linked projects and rebuilds any broken links.
 
-Create a `.nsi.json` in the root directory and list all the submodules in an array 
+Alternatively you can create a `.nsi.json` in the root directory and list all the submodules in form of an array 
 
 ```json
 // example
@@ -35,10 +35,10 @@ Create a `.nsi.json` in the root directory and list all the submodules in an arr
     "module-2"
 ]
 ```
-If you don't provide the above file `nsi` will search the `node_modules` of the project for linked projects.
+The utility will rebuild the links for the submodules specified in this file.
 
 ### Options 
-The cli has the following options :
+This utility has the following options :
 
 ```bash
 # run nsi

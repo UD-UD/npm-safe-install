@@ -1,4 +1,5 @@
 import { exec } from 'child_process'
+const chalk = require('chalk')
 
 export default class Shell {
   static async shell (cmd) {
@@ -14,7 +15,7 @@ export default class Shell {
   }
 
   static async run (packages, targetdir, newPackages) {
-    console.log('*********** Installing Dependencies ***********')
+    console.log(chalk.greenBright('\nInstalling Dependencies'))
     let installCmd
     if (newPackages !== undefined) {
       installCmd = `cd ${targetdir} && npm install ${newPackages}`
@@ -23,12 +24,12 @@ export default class Shell {
     }
     let { stdout } = await this.shell(installCmd)
     this.print(stdout)
-    console.log('*********** Rebuilding Links ***********')
+    console.log(chalk.greenBright('Rebuilding Links'))
     let log = await this.shell(`cd ${targetdir} && npm link ${packages}`)
     this.print(log.stdout)
   }
 
   static print (stdout) {
-    console.log(stdout)
+    console.log('   ' + stdout)
   }
 }
