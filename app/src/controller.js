@@ -64,7 +64,8 @@ export default class Controller {
       start = start.split(path.sep)
     }
     if (!start.length) {
-      throw new Error(`package.json not found in path ${this.path}`)
+      console.log(chalk.redBright(`FileNotFoundError: package.json not found in path ${this.path}`))
+      process.exit()
     }
     start.pop()
     var dir = start.join(path.sep)

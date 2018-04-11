@@ -15,3 +15,14 @@ let controller = new Controller(path, cli.args)
 
 console.log(chalk.gray('\nKEEP CALM!\nNSI GOT YOU COVERED'))
 controller.run()
+
+// error handling
+process.on('FileNotFoundError', (err) => {
+  console.log(chalk.redBright(err.toString()))
+  process.exit()
+})
+
+process.on('unhandledRejection', (reason, p) => {
+  console.log(chalk.red('Failed to execute command'))
+  process.exit()
+})

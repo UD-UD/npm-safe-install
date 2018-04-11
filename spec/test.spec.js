@@ -20,6 +20,9 @@ describe('TEST 1', () => {
     it('install dependencies and re-link', () => {
       expect(controller.run())
     })
+    it('find root directory', () => {
+      expect(controller.resolveRoot(path.join(targetpath, '/spec'))).to.equals(process.cwd())
+    })
   })
   context('When .nsi.json is not present', () => {
     it('check if file exist', () => {
