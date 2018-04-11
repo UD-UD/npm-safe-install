@@ -16,7 +16,7 @@ export default class Shell {
 
   static async run (packages, targetdir, newPackages) {
     console.log(chalk.greenBright('\nInstalling Dependencies'))
-    let installCmd
+    let installCmd, log
     if (newPackages !== undefined) {
       installCmd = `cd ${targetdir} && npm install ${newPackages}`
     } else {
@@ -25,7 +25,7 @@ export default class Shell {
     let { stdout } = await this.shell(installCmd)
     this.print(stdout)
     console.log(chalk.greenBright('Rebuilding Links'))
-    let log = await this.shell(`cd ${targetdir} && npm link ${packages}`)
+    log = await this.shell(`cd ${targetdir} && npm link ${packages}`)
     this.print(log.stdout)
   }
 

@@ -34,9 +34,10 @@ export default class Controller {
   }
 
   readFromNSIFile (targetPath) {
-    let nsiPath = path.join(targetPath, '.nsi.json')
-    let packages = fs.readFileSync(nsiPath, 'utf8')
-    this.runShell(JSON.parse(packages).join(' '), targetPath)
+    this.runShell(
+      JSON.parse(
+        fs.readFileSync(path.join(targetPath, '.nsi.json'), 'utf8'))
+        .join(' '), targetPath)
   }
 
   runShell (packages, targetPath) {
@@ -55,7 +56,7 @@ export default class Controller {
   }
 
   findRoot (start, check) {
-    start = start || module.parent.filename
+    start = start || this.path
     check = check || this.defaultCheck
     if (typeof start === 'string') {
       if (start[start.length - 1] !== path.sep) {

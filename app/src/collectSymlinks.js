@@ -24,8 +24,7 @@ export default class SymlinkCollector {
           if (stats.isDirectory()) {
             this.execute(foundPath, this.callback)
           } else if (stats.isSymbolicLink()) {
-            var pkgName = path.basename(foundPath)
-            this.callback(pkgName, foundPath)
+            this.callback(path.basename(foundPath), foundPath)
           }
         })
         resolve()
