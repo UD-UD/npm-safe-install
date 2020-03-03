@@ -7,30 +7,39 @@ export default class SymlinkCollector {
     this.packages = []
   }
 
-  async execute (startPath, cb) {
+  async execute (startPath) {
     let pathToNodeModules
+    let orgPrefix
 
-    if (startPath.includes('@')) {
+    if (path.basename(startPath).startsWith('@')) {
       pathToNodeModules = startPath
+      orgPrefix = `${path.basename(startPath)}/`
     } else {
       pathToNodeModules = path.join(startPath, 'node_modules')
+      orgPrefix = ''
     }
 
     await new Promise((resolve, reject) => {
-      glob(pathToNodeModules + '/*', (err, foundPaths) => {
+      glob(pathToNodeModules + '/*', async (err, foundPaths) => {
         if (err) console.warn(err)
-        foundPaths.forEach(foundPath => {
-          let stats = fs.lstatSync(foundPath)
-          if (stats.isDirectory()) {
-            this.execute(foundPath, this.callback)
+        for (const foundPath of foundPaths) {
+          const stats = fs.lstatSync(foundPath)
+          if (stats.isDirectory() && path.basename(foundPath).startsWith('@')) {
+            await this.execute(foundPath)
           } else if (stats.isSymbolicLink()) {
-            this.callback(path.basename(foundPath), foundPath)
+            const packageName = orgPrefix + path.basename(foundPath)
+            this.callback(packageName, foundPath)
+
+            // unlink the symlinked dependency folders prior to `npm install`
+            // (else, in symlinked folders, it deletes subdeps shared by root project)
+            console.log(`Unlinking symlinked dependency (protects its subdependencies): ${packageName}`)
+            fs.unlinkSync(foundPath)
           }
-        })
+        }
         resolve()
       })
     })
-    return Promise.resolve(this.packages)
+    return this.packages
   }
 
   callback (pkgName, foundPath) {

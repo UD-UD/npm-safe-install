@@ -25,8 +25,13 @@ export default class Shell {
     let { stdout } = await this.shell(installCmd)
     this.print(stdout)
     console.log(chalk.greenBright('Rebuilding Links'))
-    log = await this.shell(`cd ${targetdir} && npm link ${packages}`)
-    this.print(log.stdout)
+
+    if (packages.length) {
+      log = await this.shell(`cd ${targetdir} && npm link ${packages}`)
+      this.print(log.stdout)
+    } else {
+      this.print('No packages needed to relink')
+    }
   }
 
   static print (stdout) {

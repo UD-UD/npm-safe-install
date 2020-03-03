@@ -18,6 +18,6 @@ console.log(chalk.gray('\nKEEP CALM!\nNSI GOT YOU COVERED'))
 controller.run()
 
 process.on('unhandledRejection', (reason, p) => {
-  console.log(chalk.red('Failed to execute command'))
+  console.log(chalk.red(`Failed to execute command: ${reason}`))
   process.exit()
 })
