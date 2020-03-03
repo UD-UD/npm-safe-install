@@ -1,6 +1,6 @@
 {
   "name": "npm-safe-install",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Install packages without breaking your links",
   "main": "./out/cli.js",
   "scripts": {
