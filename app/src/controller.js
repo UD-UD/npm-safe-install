@@ -5,43 +5,34 @@ const fs = require('fs')
 const chalk = require('chalk')
 
 export default class Controller {
-  constructor (path, args) {
+  constructor (path, args, keepPrelinked) {
     this.path = path
     this.newPackages = args !== undefined ? args.join(' ') : undefined
+    this.keepPrelinked = keepPrelinked
   }
-  run () {
+  async run () {
     let targetPath = this.resolveRoot(this.path)
+    let packageNames
     if (this.checkFile(targetPath, '.nsi.json')) {
       console.log(chalk.green('\nFound .nsi.json file. \n   Proceeding for safe install..'))
-      this.readFromNSIFile(targetPath)
+      packageNames = this.readFromNSIFile(targetPath)
     } else {
       console.log(chalk.red('\nUnable to find .nsi.json') +
         chalk.cyan('\nScanning modules...') +
         chalk.green('\nProceeding for safe install...'))
-      this.collectSymLinksFromNodeModules(targetPath)
+      packageNames = await this.collectSymLinksFromNodeModules(targetPath)
     }
+    Shell.run(packageNames, targetPath, this.newPackages, this.keepPrelinked)
   }
 
-  collectSymLinksFromNodeModules (path) {
+  async collectSymLinksFromNodeModules (path) {
     let coll = new SymlinkCollector()
-    coll.execute(path).then((packages) => {
-      let packageName = []
-      packages.forEach(pkg => {
-        packageName.push(pkg.packageName)
-      })
-      this.runShell(packageName.join(' '), path)
-    })
+    const packages = await coll.execute(path)
+    return packages.map(pkg => pkg.packageName)
   }
 
   readFromNSIFile (targetPath) {
-    this.runShell(
-      JSON.parse(
-        fs.readFileSync(path.join(targetPath, '.nsi.json'), 'utf8'))
-        .join(' '), targetPath)
-  }
-
-  runShell (packages, targetPath) {
-    Shell.run(packages, targetPath, this.newPackages)
+    return JSON.parse(fs.readFileSync(path.join(targetPath, '.nsi.json'), 'utf8'))
   }
 
   checkFile (targetpath, filename) {

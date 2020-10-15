@@ -1,5 +1,7 @@
 import { exec } from 'child_process'
+const fs = require('fs')
 const chalk = require('chalk')
+const path = require('path')
 
 export default class Shell {
   static async shell (cmd) {
@@ -14,7 +16,21 @@ export default class Shell {
     })
   }
 
-  static async run (packages, targetdir, newPackages) {
+  static async run (packages, targetdir, newPackages, keepPrelinked) {
+    // unlink the symlinked dependency folders prior to `npm install`
+    // (else, in symlinked folders, it deletes subdeps shared by root project)
+    if (!keepPrelinked) {
+      console.log(chalk.greenBright('\nUnlinking symlinked dependencies (protects their subdependencies)'))
+      for (const packageName of packages) {
+        const packagePath = path.join(targetdir, 'node_modules', packageName)
+        const stats = fs.lstatSync(packagePath)
+        if (stats.isSymbolicLink()) {
+          this.print(packageName)
+          fs.unlinkSync(packagePath)
+        }
+      }
+    }
+
     console.log(chalk.greenBright('\nInstalling Dependencies'))
     let installCmd, log
     if (newPackages !== undefined) {
@@ -24,10 +40,10 @@ export default class Shell {
     }
     let { stdout } = await this.shell(installCmd)
     this.print(stdout)
-    console.log(chalk.greenBright('Rebuilding Links'))
 
+    console.log(chalk.greenBright('Rebuilding Links'))
     if (packages.length) {
-      log = await this.shell(`cd ${targetdir} && npm link ${packages}`)
+      log = await this.shell(`cd ${targetdir} && npm link ${packages.join(' ')}`)
       this.print(log.stdout)
     } else {
       this.print('No packages needed to relink')

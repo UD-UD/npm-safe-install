@@ -7,12 +7,14 @@ const packageData = require('../../package.json')
 cli
   .version(packageData.version, '-v, --version')
   .option('-t, --target <n>', 'Path of the target directory')
+  .option('-k, --keep-prelinked', 'Keep pre-symlinked deps linked during npm-install (faster, but risks subdep changes)')
   .usage('[options] <package> [morePackage ...]')
   .parse(process.argv)
 
 let path = cli.target !== undefined ? cli.target : process.cwd()
+let keepPrelinked = cli.keepPrelinked !== undefined ? cli.keepPrelinked : false
 
-let controller = new Controller(path, cli.args)
+let controller = new Controller(path, cli.args, keepPrelinked)
 
 console.log(chalk.gray('\nKEEP CALM!\nNSI GOT YOU COVERED'))
 controller.run()
