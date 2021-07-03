@@ -23,6 +23,7 @@ export default class Shell {
       console.log(chalk.greenBright('\nUnlinking symlinked dependencies (protects their subdependencies)'))
       for (const packageName of packages) {
         const packagePath = path.join(targetdir, 'node_modules', packageName)
+        if (!fs.existsSync(packagePath)) continue
         const stats = fs.lstatSync(packagePath)
         if (stats.isSymbolicLink()) {
           this.print(packageName)
