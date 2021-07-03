@@ -29,11 +29,6 @@ export default class SymlinkCollector {
           } else if (stats.isSymbolicLink()) {
             const packageName = orgPrefix + path.basename(foundPath)
             this.callback(packageName, foundPath)
-
-            // unlink the symlinked dependency folders prior to `npm install`
-            // (else, in symlinked folders, it deletes subdeps shared by root project)
-            console.log(`Unlinking symlinked dependency (protects its subdependencies): ${packageName}`)
-            fs.unlinkSync(foundPath)
           }
         }
         resolve()
